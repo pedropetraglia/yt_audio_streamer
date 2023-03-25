@@ -22,12 +22,13 @@ def play_song(height):
     driver.implicitly_wait(5)
     search_query = height
     print(search_query)
-
-    driver.get('https://www.youtube.com/results?search_query={}'.format(search_query))
-    select = driver.find_element(By.CSS_SELECTOR, 'div#contents ytd-item-section-renderer>div#contents a#thumbnail')
-    driver.implicitly_wait(5)
-    link = select.get_attribute('href')
-    print(link)
+    
+    link = None
+    while (link == None):
+        driver.get('https://www.youtube.com/results?search_query={}'.format(search_query))
+        select = driver.find_element(By.CSS_SELECTOR, 'div#contents ytd-item-section-renderer>div#contents a#thumbnail')
+        link = select.get_attribute('href')
+        print(link)
 
 # ------------------------ YT player -----------------------------------------------
 
@@ -50,8 +51,8 @@ def play_song(height):
 
 # ------------------------------ GUI ----------------------------------------------
 
-layout = [[sg.Input('', enable_events=True, key='-INPUT-', font=('Arial Bold', 20), expand_x=True, justification='left')],
-          [sg.Button('Submit', font=('Arial Bold', 20))],
+layout = [[sg.Input('', enable_events=True, key='-INPUT-', font=('Arial Bold', 15), size=(30, 20))],
+          [sg.Button('Submit', font=('Arial Bold', 10))],
           [sg.Text("MUSIC PLAYING: "), sg.Text(key='text3')],
           [sg.Button("Play")], 
           [sg.Button("Pause")],
@@ -61,7 +62,7 @@ layout = [[sg.Input('', enable_events=True, key='-INPUT-', font=('Arial Bold', 2
         ]
 
 # Create the window
-window = sg.Window("Pedro YT Player", layout, margins=(100, 50))
+window = sg.Window("Pedro YT Player", layout, margins=(5, 5))
 
 # ----------------------------------------------------------------------------------
 
