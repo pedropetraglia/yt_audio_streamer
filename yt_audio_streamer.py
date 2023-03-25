@@ -1,6 +1,7 @@
 import pafy
 import os
 os.add_dll_directory(r'C:/Program Files/VideoLAN/VLC')
+import time
 from time import sleep
 import PySimpleGUI as sg
 
@@ -67,9 +68,11 @@ window = sg.Window("Pedro YT Player", layout, margins=(100, 50))
 #MAIN LOOP
 while True:
     pass
-    event, values = window.read(timeout=250)
-    window['text'].update(player.get_time()/1000)
-    window['text2'].update(player.get_length()/1000)
+    event, values = window.read(timeout=1000)
+    time_obj1=time.gmtime(int(player.get_time()/1000))
+    window['text'].update(time.strftime("%M:%S",time_obj1))
+    time_obj2=time.gmtime(int(player.get_length()/1000))
+    window['text2'].update(time.strftime("%M:%S",time_obj2))
     # End program if user closes window or
     # presses the OK button
     if event == sg.WIN_CLOSED:
