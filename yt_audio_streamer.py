@@ -51,15 +51,16 @@ def play_song(height):
 
 # ------------------------------ GUI ----------------------------------------------
 
-layout = [[sg.Input('', enable_events=True, key='-INPUT-', font=('Arial Bold', 15), size=(30, 20))],
+layout = [[sg.Input('', enable_events=True, key='-INPUT-', font=('Arial Bold', 15), size=(16, 10))],
           [sg.Button('Submit', font=('Arial Bold', 10))],
           [sg.Text("MUSIC PLAYING: "), sg.Text(key='text3')],
-          [sg.Button("Play")], 
-          [sg.Button("Pause")],
-          [sg.Button("Restart")], 
-          [sg.Button("Stop")], 
-          [sg.Text(key='text'), sg.Text('|'), sg.Text(size=(15,1), key='text2')]
+          [sg.Button("Play"), sg.Button("Pause"), sg.Button("Restart"), sg.Button("Stop")], 
+          [sg.Text(key='text'), sg.Text('|'), sg.Text(size=(15,1), key='text2')],
+          [sg.ProgressBar(1000, orientation='h', size=(16, 10), border_width=0, key='-PROGRESS_BAR-')]
         ]
+
+progress_bar=0
+trigger = 0
 
 # Create the window
 window = sg.Window("Pedro YT Player", layout, margins=(5, 5))
@@ -74,11 +75,15 @@ while True:
     window['text'].update(time.strftime("%M:%S",time_obj1))
     time_obj2=time.gmtime(int(player.get_length()/1000))
     window['text2'].update(time.strftime("%M:%S",time_obj2))
+    if (trigger == 1):
+        progress_bar = progress_bar+1000/int(player.get_length()/1000)
+        window['-PROGRESS_BAR-'].update(progress_bar)
     # End program if user closes window or
     # presses the OK button
     if event == sg.WIN_CLOSED:
         break
     elif event == "Submit":
+        trigger = 1
         print(values['-INPUT-'])
         height = values['-INPUT-']
         rame = play_song(height)
