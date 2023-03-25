@@ -63,7 +63,7 @@ progress_bar=0
 trigger = 0
 
 # Create the window
-window = sg.Window("Pedro YT Player", layout, margins=(5, 5))
+window = sg.Window("Pedro YT Player", layout, margins=(5, 5), size=(200, 200))
 
 # ----------------------------------------------------------------------------------
 
@@ -76,7 +76,8 @@ while True:
     time_obj2=time.gmtime(int(player.get_length()/1000))
     window['text2'].update(time.strftime("%M:%S",time_obj2))
     if (trigger == 1):
-        progress_bar = progress_bar+1000/int(player.get_length()/1000)
+        if (int(player.get_length()/1000) != 0):
+            progress_bar = progress_bar+1000/int(player.get_length()/1000)
         window['-PROGRESS_BAR-'].update(progress_bar)
     # End program if user closes window or
     # presses the OK button
@@ -90,13 +91,21 @@ while True:
         window['text3'].update(rame)
         window['-INPUT-'].update([])
     elif event == "Play":
+        trigger = 1
         player.play()
     elif event == "Pause":
+        trigger = 0
         player.pause()
     elif event == "Restart":
+        trigger = 1
+        progress_bar = 0
+        window['-PROGRESS_BAR-'].update(progress_bar)
         player.stop()
         player.play()
     elif event == "Stop":
+        trigger = 0
+        progress_bar = 0
+        window['-PROGRESS_BAR-'].update(progress_bar)
         player.stop()
 
 window.close()
