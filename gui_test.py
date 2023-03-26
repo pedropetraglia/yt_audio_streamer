@@ -1,18 +1,27 @@
-# hello_psg.py
-
 import PySimpleGUI as sg
 
-layout = [[sg.Text("MUSIC PLAYING:")], [sg.Button("Play")], [sg.Button("Pause")], [sg.Button("Stop")]]
+sg.theme("DarkBlue3")
+sg.set_options(font=("Courier New", 11))
 
-# Create the window
-window = sg.Window("Pedro YT Player", layout, margins=(100, 50))
-
-# Create an event loop
+width = 80
+layout =[
+    [sg.Text(" Latest News ", background_color='#000040', text_color='white', font=("Courier New", 11, 'bold')),
+     sg.Text("", size=(width, 1), background_color='#000080', text_color='white', key='news_ticker')],
+    [sg.Multiline("", size=(width, 15), expand_x=True, key='news')],
+    [sg.Button("Update")],
+]
+window = sg.Window("Title", layout, resizable=True, finalize=True)
+text = ' '*width
 while True:
-    event, values = window.read()
-    # End program if user closes window or
-    # presses the OK button
-    if event == "OK" or event == sg.WIN_CLOSED:
+
+    event, values = window.read(timeout=200)
+
+    if event == sg.WINDOW_CLOSED:
         break
+    elif event == 'Update':
+        text = ('     '.join(map(str.strip, values['news'].split('\n')))).ljust(width)
+
+    window['news_ticker'].update(value=text)
+    text = text[1:] + text[0]
 
 window.close()

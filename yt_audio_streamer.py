@@ -52,8 +52,8 @@ def play_song(height):
 # ------------------------------ GUI ----------------------------------------------
 
 layout = [[sg.Input('', enable_events=True, key='-INPUT-', font=('Arial Bold', 15), size=(16, 10))],
-          [sg.Button('Submit', font=('Arial Bold', 10))],
-          [sg.Text("MUSIC PLAYING: "), sg.Text(key='text3')],
+          [sg.Button('Search', font=('Arial Bold', 10))],
+          [sg.Text("PLAYING:"), sg.Text(key='text3')],
           [sg.Button("Play"), sg.Button("Pause"), sg.Button("Restart"), sg.Button("Stop")], 
           [sg.Text(key='text'), sg.Text('|'), sg.Text(size=(15,1), key='text2')],
           [sg.ProgressBar(1000, orientation='h', size=(16, 10), border_width=0, key='-PROGRESS_BAR-')]
@@ -61,6 +61,9 @@ layout = [[sg.Input('', enable_events=True, key='-INPUT-', font=('Arial Bold', 1
 
 progress_bar=0
 trigger = 0
+
+width = 20
+text = ' '*width
 
 # Create the window
 window = sg.Window("Pedro YT Player", layout, margins=(5, 5), size=(200, 200))
@@ -79,17 +82,22 @@ while True:
         if (int(player.get_length()/1000) != 0):
             progress_bar = progress_bar+1000/int(player.get_length()/1000)
         window['-PROGRESS_BAR-'].update(progress_bar)
-    # End program if user closes window or
-    # presses the OK button
+    
+    window['text3'].update(value=text)
+    text = text[1:] + text[0]
+   
+
     if event == sg.WIN_CLOSED:
         break
-    elif event == "Submit":
+    elif event == "Search":
         trigger = 1
         print(values['-INPUT-'])
         height = values['-INPUT-']
         rame = play_song(height)
         window['text3'].update(rame)
         window['-INPUT-'].update([])
+        text = ('     '.join(map(str.strip, rame.split('\n')))).ljust(width)
+
     elif event == "Play":
         trigger = 1
         player.play()
