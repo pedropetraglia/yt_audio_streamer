@@ -86,7 +86,9 @@ while True:
     window['text3'].update(value=text)
     text = text[1:] + text[0]
    
-
+    if (player.get_time() == player.get_length()):
+        window['text'].update(time.strftime("%M:%S",time_obj2))
+        
     if event == sg.WIN_CLOSED:
         break
     elif event == "Search":
@@ -97,6 +99,7 @@ while True:
         window['text3'].update(rame)
         window['-INPUT-'].update([])
         text = ('     '.join(map(str.strip, rame.split('\n')))).ljust(width)
+        progress_bar = 0
 
     elif event == "Play":
         trigger = 1
