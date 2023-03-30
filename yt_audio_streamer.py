@@ -51,19 +51,24 @@ def play_song(height):
 
 # ------------------------------ GUI ----------------------------------------------
 
-layout = [[sg.Input('', enable_events=True, key='-INPUT-', font=('Arial Bold', 15), size=(16, 10))],
+layout = [[sg.Input('', enable_events=True, key='-INPUT-', font=('Aril', 12), size=(20, 10))],
           [sg.Button('Search', font=('Arial Bold', 10))],
           [sg.Text("PLAYING:"), sg.Text(key='text3')],
           [sg.Button("Play"), sg.Button("Pause"), sg.Button("Restart"), sg.Button("Stop")], 
           [sg.Text(key='text'), sg.Text('|'), sg.Text(size=(15,1), key='text2')],
-          [sg.ProgressBar(1000, orientation='h', size=(16, 10), border_width=0, key='-PROGRESS_BAR-')]
+          [sg.ProgressBar(1000, orientation='h', size=(16, 10), border_width=0, key='-PROGRESS_BAR-')],
+          [sg.Text("NEXT IN QUEUE  :"), sg.Text(key='queue')],
         ]
 
 progress_bar=0
 trigger = 0
+done_play = 1
+playnow = 0
+done = 0
 
 width = 20
 text = ' '*width
+text_queue = ' '*width
 
 # Create the window
 window = sg.Window("Pedro YT Player", layout, margins=(5, 5), size=(200, 200))
@@ -85,24 +90,39 @@ while True:
     
     window['text3'].update(value=text)
     text = text[1:] + text[0]
+
+    window['queue'].update(text_queue)
+    text_queue = text_queue[1:] + text_queue[0]
    
-    if (player.get_time() == player.get_length()):
+    if (player.get_time()+500 > player.get_length() and done == 1):
         window['text'].update(time.strftime("%M:%S",time_obj2))
+        done_play = 1
+        playnow = 1
+
+    print(player.get_time())
+    print(player.get_length())
         
     if event == sg.WIN_CLOSED:
         break
-    elif event == "Search":
+    elif event == "Search" or playnow == 1:
+        done = 1
         trigger = 1
+        playnow = 0
         print(values['-INPUT-'])
         height = values['-INPUT-']
-        rame = play_song(height)
-        window['text3'].update(rame)
-        window['-INPUT-'].update([])
-        text = ('     '.join(map(str.strip, rame.split('\n')))).ljust(width)
-        progress_bar = 0
+        window['queue'].update(height)
+        text_queue = ('     '.join(map(str.strip, height.split('\n')))).ljust(width)
+        if done_play == 1:
+            rame = play_song(height)
+            window['text3'].update(rame)
+            window['-INPUT-'].update([])
+            text = ('     '.join(map(str.strip, rame.split('\n')))).ljust(width)
+            progress_bar = 0
+            done_play = 0
 
     elif event == "Play":
         trigger = 1
+        playing = 1
         player.play()
     elif event == "Pause":
         trigger = 0
