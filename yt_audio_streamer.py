@@ -64,7 +64,6 @@ progress_bar=0
 trigger = 0
 done_play = 1
 playnow = 0
-done = 0
 
 width = 20
 text = ' '*width
@@ -94,7 +93,7 @@ while True:
     window['queue'].update(text_queue)
     text_queue = text_queue[1:] + text_queue[0]
    
-    if (player.get_time()+500 > player.get_length() and done == 1):
+    if (player.get_time()+500 > player.get_length() and progress_bar>=1000):
         window['text'].update(time.strftime("%M:%S",time_obj2))
         done_play = 1
         playnow = 1
@@ -105,7 +104,6 @@ while True:
     if event == sg.WIN_CLOSED:
         break
     elif event == "Search" or playnow == 1:
-        done = 1
         trigger = 1
         playnow = 0
         print(values['-INPUT-'])
